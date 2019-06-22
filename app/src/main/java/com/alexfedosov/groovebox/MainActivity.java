@@ -44,16 +44,21 @@ public class MainActivity extends AppCompatActivity {
         for (AudioDeviceInfo device: devices){
             Log.i("Device", String.valueOf(device.getProductName()).concat(" ").concat(String.valueOf(device.getId())));
         }
-
+        nativeInit();
         startEngine(13);
     }
 
     private native void startEngine(int deviceId);
+    private native void nativeInit();
 
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         Log.i("Key code", String.valueOf(keyCode));
         return super.onKeyDown(keyCode, event);
+    }
+
+    public void setSampleData(byte[] data) {
+        Log.i("Sample data", "Samples: ".concat(String.valueOf(data.length)));
     }
 }

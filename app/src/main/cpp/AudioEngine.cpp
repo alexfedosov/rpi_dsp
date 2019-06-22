@@ -47,6 +47,7 @@ bool AudioEngine::start(int deviceId) {
 DataCallbackResult AudioEngine::onAudioReady(AudioStream *oboeStream, void *audioData, int32_t numFrames) {
     LOGI("num frames %d", numFrames);
     outputNode.writeNextAudioBlock(static_cast<float *>(audioData));
+    queue->try_enqueue(numFrames);
     return DataCallbackResult::Continue;
 }
 
