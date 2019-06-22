@@ -2,6 +2,7 @@
 // Created by Alexander Fedosov on 2019-06-21.
 //
 #include "AudioEngine.h"
+#include <vector>
 #include "logging_macros.h"
 
 constexpr int32_t kBufferSizeInBursts = 4;
@@ -9,24 +10,31 @@ constexpr int32_t kBufferSizeInBursts = 4;
 bool AudioEngine::start(int deviceId) {
     oboe::AudioStreamBuilder *builder = new oboe::AudioStreamBuilder();
 
+    AudioContextInfo audioContextInfo;
+    audioContextInfo.framesInBlock = 1024;
+
     oboe::Result result = builder->
             setDeviceId(deviceId)->
-            setChannelCount(2)->
+            setChannelCount(1)->
             setFormat(AudioFormat::Float)->
+            setFramesPerCallback(audioContextInfo.framesInBlock)->
             setSharingMode(oboe::SharingMode::Exclusive)->
             setPerformanceMode(oboe::PerformanceMode::LowLatency)->
             setCallback(this)->
             openStream(&audioStream);
 
     if (result == Result::OK) {
-        double freq[3] = { 220.00, 277.18, 164.81};
+        audioContextInfo.sampleRate = audioStream->getSampleRate();
+        audioContextInfo.channelCount = audioStream->getChannelCount();
+        outputNode.updateAudioContext(audioContextInfo);
 
-        for (int i = 0; i < 3; i++) {
-            Oscillator *oscillator = new Oscillator();
-            oscillator->setSampleRate(audioStream->getSampleRate());
-            oscillator->setFrequency(freq[i]);
-            oscillators.push_back(oscillator);
+        std::vector<float> freq = { 110.00, 277.18, 164.81};
+
+        for (int i = 0; i < freq.size(); i++) {
+            std::shared_ptr<SineWaveOscillatorNode> oscillator (new SineWaveOscillatorNode(freq[i]));
+            outputNode.addInput(oscillator);
         }
+
         audioStream->setBufferSizeInFrames(audioStream->getFramesPerBurst() * kBufferSizeInBursts);
         Result startResult = audioStream->requestStart();
         LOGI("Audio stream sample rate: %d %s", audioStream->getSampleRate(), convertToText(startResult));
@@ -37,11 +45,8 @@ bool AudioEngine::start(int deviceId) {
 }
 
 DataCallbackResult AudioEngine::onAudioReady(AudioStream *oboeStream, void *audioData, int32_t numFrames) {
-
-    oscillators[0]->render(static_cast<float *>(audioData), numFrames, false);
-    oscillators[1]->render(static_cast<float *>(audioData), numFrames, true);
-    oscillators[2]->render(static_cast<float *>(audioData), numFrames, true);
-
+    LOGI("num frames %d", numFrames);
+    outputNode.writeNextAudioBlock(static_cast<float *>(audioData));
     return DataCallbackResult::Continue;
 }
 

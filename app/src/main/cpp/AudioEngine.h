@@ -6,9 +6,10 @@
 #define GROOVEBOX_AUDIOENGINE_H
 
 #include <stdlib.h>
-#include <vector>
 #include <oboe/Oboe.h>
-#include "Oscillator.h"
+#include "AudioNodes/AudioContext.h"
+#include "AudioNodes/SineWaveOscillatorNode.h"
+#include "AudioNodes/OutputNode.h"
 
 using namespace oboe;
 
@@ -19,8 +20,9 @@ public:
     DataCallbackResult onAudioReady(AudioStream *oboeStream, void *audioData, int32_t numFrames);
     void onErrorBeforeClose(AudioStream *oboeStream, Result error);
     void onErrorAfterClose(AudioStream *oboeStream, Result error);
+
 private:
-    std::vector<Oscillator *> oscillators;
+    OutputNode outputNode;
     oboe::AudioStream *audioStream;
 };
 

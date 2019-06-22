@@ -23,8 +23,8 @@ set (APP_DIR src/main/cpp)
 file (GLOB_RECURSE APP_SOURCES
         ${APP_DIR}/jni-bridge.cpp
         ${APP_DIR}/AudioEngine.cpp
-        ${APP_DIR}/Oscillator.cpp
         ${APP_DIR}/AudioNodes/AudioNode.cpp
+        ${APP_DIR}/AudioNodes/SineWaveOscillatorNode.cpp
         ${APP_DIR}/AudioNodes/OutputNode.cpp
         )
 
@@ -32,7 +32,6 @@ add_library(native-lib
         SHARED
         ${APP_SOURCES}
         )
-include_directories(src/main/cpp/includes/)
 
 target_link_libraries(native-lib android log oboe)
 #target_compile_options(native-lib PRIVATE -Wall -Werror "$<$<CONFIG:RELEASE>:-Ofast>")
