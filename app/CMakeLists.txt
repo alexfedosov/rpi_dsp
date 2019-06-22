@@ -26,6 +26,7 @@ file (GLOB_RECURSE APP_SOURCES
         ${APP_DIR}/Oscillator.cpp
         ${APP_DIR}/Mixer.cpp
         ${APP_DIR}/AudioNodes/AudioNode.cpp
+        ${APP_DIR}/AudioNodes/OutputNode.cpp
         )
 
 add_library(native-lib
