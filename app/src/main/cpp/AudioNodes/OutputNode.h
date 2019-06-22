@@ -12,6 +12,9 @@ class OutputNode: public AudioNode {
 public:
     OutputNode();
     void writeNextAudioBlock(float *audioData);
+
+private:
+    float amplitudeScaleFactor;
 };
 
 
