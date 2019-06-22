@@ -24,7 +24,6 @@ file (GLOB_RECURSE APP_SOURCES
         ${APP_DIR}/jni-bridge.cpp
         ${APP_DIR}/AudioEngine.cpp
         ${APP_DIR}/Oscillator.cpp
-        ${APP_DIR}/Mixer.cpp
         ${APP_DIR}/AudioNodes/AudioNode.cpp
         ${APP_DIR}/AudioNodes/OutputNode.cpp
         )
