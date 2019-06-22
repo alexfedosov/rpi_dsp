@@ -25,6 +25,16 @@ android {
             path file('CMakeLists.txt')
         }
     }
+
+    flavorDimensions 'platform'
+    productFlavors {
+        things {
+            dimension 'platform'
+        }
+        mobile {
+            dimension 'platform'
+        }
+    }
 }
 
 dependencies {
@@ -34,5 +44,5 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    compileOnly 'com.google.android.things:androidthings:+'
+    thingsCompileOnly 'com.google.android.things:androidthings:1.0'
 }
